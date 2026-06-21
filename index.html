@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SHS Enrollment System</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body class="landing-page">
+
+  <header class="top-bar">
+    <div class="logo-wrap">
+      <div class="logo-icon">
+    <img src="https://i.imgur.com/Vs9bLaN.jpeg" alt="School Logo">
+      </div>
+      <div>
+        <div class="school-name">Peña 1 National High School</div>
+        <div class="school-sub">Senior High School</div>
+      </div>
+    </div>
+    <a href="{{ url_for('login') }}" class="btn-ghost"><i class="fas fa-lock"></i> Admin</a>
+  </header>
+
+  <main class="hero">
+    <div class="hero-badge">S.Y. 2026-2027</div>
+    <h1 class="hero-title">SHS Enrollment<br><span>Now Open</span></h1>
+    <p class="hero-sub">Enroll online for Grade 11 & Grade 12. Choose your strand and start your journey today.</p>
+    <a href="{{ url_for('register') }}" class="btn-primary btn-lg">
+      <i class="fas fa-pen-to-square"></i> Enroll Now
+    </a>
+  </main>
+
+  <section class="strands-section">
+    <h2 class="section-title">Available Strand</h2>
+    <div class="strands-grid strands-grid--single">
+      <div class="strand-card strand-card--featured">
+        <div class="strand-icon strand-icon--lg"><i class="fas fa-star"></i></div>
+        <div class="strand-name">GAS</div>
+        <div class="strand-desc">General Academic Strand — a flexible track that prepares students for any college course or career path.</div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>© 2026 Peña 1 National High School SHS Enrollment System. All Rights Reserved.
+      For inquiries, please contact the school administration.</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
