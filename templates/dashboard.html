@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard – SHS Enrollment</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+</head>
+<body class="dashboard-page">
+
+  <!-- Top Nav -->
+  <header class="dash-header">
+    <div class="dash-logo">
+      <img src="https://i.imgur.com/Vs9bLaN.jpeg" alt="School Logo">
+      <span>SHS Enrollment</span>
+    </div>
+    <a href="{{ url_for('logout') }}" class="btn-ghost btn-sm">
+      <i class="fas fa-right-from-bracket"></i> Logout
+    </a>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+          <i class="fas {% if category == 'success' %}fa-circle-check{% else %}fa-circle-exclamation{% endif %}"></i>
+          {{ message }}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  <div class="dash-body">
+
+    <!-- Stats Row -->
+    <div class="stats-row">
+      <div class="stat-card stat-total">
+        <div class="stat-num">{{ total }}</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-card stat-pending">
+        <div class="stat-num">{{ pending }}</div>
+        <div class="stat-label">Pending</div>
+      </div>
+      <div class="stat-card stat-enrolled">
+        <div class="stat-num">{{ enrolled }}</div>
+        <div class="stat-label">Enrolled</div>
+      </div>
+      <div class="stat-card stat-rejected">
+        <div class="stat-num">{{ rejected }}</div>
+        <div class="stat-label">Rejected</div>
+      </div>
+    </div>
+
+    <!-- Filters -->
+    <form method="GET" action="{{ url_for('dashboard') }}" class="filter-bar">
+      <div class="search-wrap">
+        <i class="fas fa-search search-icon"></i>
+        <input type="text" name="search" placeholder="Search name or ID…" value="{{ search }}"/>
+      </div>
+      <div class="filter-row">
+        <select name="strand">
+          <option value="">All Strands</option>
+          <option {% if strand_filter == 'STEM' %}selected{% endif %}>STEM</option>
+          <option {% if strand_filter == 'ABM' %}selected{% endif %}>ABM</option>
+          <option {% if strand_filter == 'HUMSS' %}selected{% endif %}>HUMSS</option>
+          <option {% if strand_filter == 'TVL' %}selected{% endif %}>TVL</option>
+        </select>
+        <select name="status">
+          <option value="">All Status</option>
+          <option {% if status_filter == 'Pending' %}selected{% endif %}>Pending</option>
+          <option {% if status_filter == 'Enrolled' %}selected{% endif %}>Enrolled</option>
+          <option {% if status_filter == 'Rejected' %}selected{% endif %}>Rejected</option>
+        </select>
+        <button type="submit" class="btn-primary btn-sm"><i class="fas fa-filter"></i> Filter</button>
+      </div>
+    </form>
+
+    <!-- Student List -->
+    <div class="student-list">
+      {% if students %}
+        {% for s in students %}
+        <div class="student-card">
+          <div class="student-card-top">
+            <div>
+              <div class="student-name">{{ s.last_name }}, {{ s.first_name }} {{ s.middle_name }}</div>
+              <div class="student-id-text">{{ s.student_id }}</div>
+            </div>
+            <span class="badge badge-{{ s.status | lower }}">{{ s.status }}</span>
+          </div>
+
+          <div class="student-details">
+            <div class="detail-item"><i class="fas fa-layer-group"></i> {{ s.grade_level }} – {{ s.strand }}</div>
+            <div class="detail-item"><i class="fas fa-venus-mars"></i> {{ s.gender }}</div>
+            <div class="detail-item"><i class="fas fa-phone"></i> {{ s.contact }}</div>
+            <div class="detail-item"><i class="fas fa-calendar"></i> {{ s.school_year }}</div>
+          </div>
+
+          <!-- Expandable section -->
+          <button class="expand-btn" onclick="toggleExpand(this)">
+            <i class="fas fa-chevron-down"></i> View More
+          </button>
+          <div class="student-expand hidden">
+            <div class="detail-item"><i class="fas fa-location-dot"></i> {{ s.address }}</div>
+            <div class="detail-item"><i class="fas fa-people-roof"></i> {{ s.guardian_name }} – {{ s.guardian_contact }}</div>
+            <div class="detail-item"><i class="fas fa-clock"></i> Enrolled: {{ s.enrolled_at }}</div>
+          </div>
+
+          <!-- Actions -->
+          <div class="student-actions">
+            <form method="POST" action="{{ url_for('update_status', student_id=s.id) }}" class="action-form">
+              <select name="status" class="status-select">
+                <option {% if s.status == 'Pending' %}selected{% endif %}>Pending</option>
+                <option {% if s.status == 'Enrolled' %}selected{% endif %}>Enrolled</option>
+                <option {% if s.status == 'Rejected' %}selected{% endif %}>Rejected</option>
+              </select>
+              <button type="submit" class="btn-action btn-save">
+                <i class="fas fa-check"></i> Save
+              </button>
+            </form>
+            <form method="POST" action="{{ url_for('delete_student', student_id=s.id) }}"
+                  onsubmit="return confirm('Delete {{ s.first_name }} {{ s.last_name }}?')">
+              <button type="submit" class="btn-action btn-delete">
+                <i class="fas fa-trash"></i>
+              </button>
+            </form>
+          </div>
+
+        </div>
+        {% endfor %}
+      {% else %}
+        <div class="empty-state">
+          <i class="fas fa-users-slash"></i>
+          <p>No students found.</p>
+        </div>
+      {% endif %}
+    </div>
+
+  </div><!-- end dash-body -->
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
