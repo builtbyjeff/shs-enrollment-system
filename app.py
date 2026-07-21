@@ -51,9 +51,10 @@ def init_db():
     ''')
 
     # Insert default admin if not exists
+    # Change this password before using in production
     cursor.execute("SELECT * FROM admins WHERE username = 'admin'")
     if not cursor.fetchone():
-        cursor.execute("INSERT INTO admins (username, password) VALUES ('admin', 'J3ff@Admin2026')")
+        cursor.execute("INSERT INTO admins (username, password) VALUES ('admin', 'ChangeMe123')")
 
     conn.commit()
     conn.close()
