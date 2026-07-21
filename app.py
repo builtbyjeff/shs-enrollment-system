@@ -4,7 +4,7 @@ import os
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'shs_enrollment_secret_key_2024'
+app.secret_key = 'J3ff_2026!Flask#8xP$91'
 
 DB_PATH = 'database.db'
 
@@ -53,7 +53,7 @@ def init_db():
     # Insert default admin if not exists
     cursor.execute("SELECT * FROM admins WHERE username = 'admin'")
     if not cursor.fetchone():
-        cursor.execute("INSERT INTO admins (username, password) VALUES ('admin', 'admin123')")
+        cursor.execute("INSERT INTO admins (username, password) VALUES ('admin', 'J3ff@Admin2026')")
 
     conn.commit()
     conn.close()
